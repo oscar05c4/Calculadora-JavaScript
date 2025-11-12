@@ -9,16 +9,16 @@ class Parser {
     this.input = [];
     this.output = [];
 
-    // Pila de valores para la evaluación (mantener, aunque la evaluación final usa eval)
+    // Pila de valores para la evaluación (mantener)
     this.valueStack = [];
   }
 
   // Adaptador de léxico simple: simula la tokenización
   lex(expression) {
-    // Reemplaza los números por el token 'num' para el parser LL(1)
+    // 🟢 MODIFICACIÓN: Incluir '%' en la regex para tokenización
     const tokenized = expression
       .replace(/\s+/g, '') // Elimina espacios
-      .match(/(\d+(\.\d+)?|[\+\-\*\/\(\)]|\$)/g) || [];
+      .match(/(\d+(\.\d+)?|[\+\-\*\/\%\(\)]|\$)/g) || [];
 
     const stream = tokenized.map(t => {
       if (!isNaN(t)) {
@@ -35,14 +35,11 @@ class Parser {
     return stream;
   }
 
-  // Se eliminó la lógica compleja de 'evaluate' basada en reducciones,
-  // ya que la evaluación LL(1) es compleja y se sustituye con 'eval' al final.
-  // Dejamos solo la acción de apilar valores para mantener la estructura.
+  // Se mantiene el método evaluate solo para registrar los números en el stack.
   evaluate(action) {
     if (action.type === 'match' && action.symbol === Tokens.NUMBER) {
       this.valueStack.push(action.value);
     }
-    // Otras acciones semánticas se ignoran, ya que usaremos eval() al final.
   }
 
   // Algoritmo LL(1) principal
@@ -84,13 +81,13 @@ class Parser {
           return {
             success: false,
             error: `Error de sintaxis: Se esperaba '${X}' pero se encontró '${a}' en la posición ${inputPointer}.`,
-            trace: this.output // 🟢 IMPORTANTE: Incluir la traza en el error
+            trace: this.output
           };
         }
       }
       // 2. EXPANSIÓN (Expand): X es No Terminal
       else {
-        const entry = this.table[X][a];
+        const entry = this.table[X] ? this.table[X][a] : null;
 
         if (entry) {
           // Si hay una producción: X -> alpha
@@ -105,32 +102,44 @@ class Parser {
           }
 
           this.output[this.output.length - 1].action = `Reducción: ${entry.prod} (${entry.ruleIndex})`;
-          // No hay llamadas a evaluate aquí porque la evaluación basada en reducciones de una gramática LL(1)
-          // requiere pasos adicionales que no están implementados (como la pila de valores separada para atributos).
         } else {
           // No hay entrada en la tabla (Error)
           return {
             success: false,
             error: `Error de sintaxis: No hay regla para [${X}, ${a}] en la tabla LL(1) en la posición ${inputPointer}.`,
-            trace: this.output // 🟢 IMPORTANTE: Incluir la traza en el error
+            trace: this.output
           };
         }
       }
     }
 
-    // Evaluación final: Usamos la función nativa JS eval() para calcular el resultado.
+    // 🟢 EVALUACIÓN FINAL: Manejo del porcentaje
     try {
-      // Reemplaza 'num' por su valor real en la expresión tokenizada para que eval() funcione.
-      const rawExpression = this.input.map(t => t.type === Tokens.NUMBER ? t.value : t.value).join('').replace(/\$/g, '');
-      const finalResult = eval(rawExpression);
+      let expressionString = this.input.map(t => {
+        if (t.type === Tokens.NUMBER) {
+          // Devolver el valor numérico real
+          return t.value.toString();
+        }
+        if (t.type === Tokens.PERCENT) {
+          // Reemplazar '%' con '/ 100' para que eval() lo interprete como división por 100
+          return '/ 100';
+        }
+        if (t.type === Tokens.EOF) {
+          return ''; // Ignorar $
+        }
+        // Devolver el símbolo del operador o paréntesis
+        return t.value;
+      }).join('');
+
+      const finalResult = eval(expressionString);
 
       return { success: true, trace: this.output, result: finalResult };
 
     } catch (e) {
       return {
         success: false,
-        error: `Error durante la evaluación de la expresión: ${e.message}`,
-        trace: this.output // 🟢 IMPORTANTE: Incluir la traza en el error de evaluación
+        error: `Error durante la evaluación de la expresión: ${e.message}. Asegúrese de que la expresión esté bien formada.`,
+        trace: this.output
       };
     }
   }

@@ -1,8 +1,8 @@
 // model/Grammar.js
-// Depende de Token.js
+// Depende de Token.js (que ya globaliza Tokens, NonTerminals, etc.)
 
 /** Estructura de una Producción: [NoTerminal, [Símbolo1, Símbolo2, ...]] */
-const Grammar = [
+let Grammar = [
   // E -> T E'
   [Tokens.E, [Tokens.T, Tokens.E_PRIME]],
 
@@ -23,10 +23,16 @@ const Grammar = [
   // T' -> λ
   [Tokens.T_PRIME, [Tokens.LAMBDA]],
 
-  // F -> ( E )
-  [Tokens.F, [Tokens.OPEN_PAREN, Tokens.E, Tokens.CLOSE_PAREN]],
-  // F -> num
-  [Tokens.F, [Tokens.NUMBER]]
+  // F -> ( E ) F'
+  [Tokens.F, [Tokens.OPEN_PAREN, Tokens.E, Tokens.CLOSE_PAREN, Tokens.F_PRIME]],
+  // F -> num F'
+  [Tokens.F, [Tokens.NUMBER, Tokens.F_PRIME]],
+
+  // F' -> % F'
+  [Tokens.F_PRIME, [Tokens.PERCENT, Tokens.F_PRIME]],
+  // F' -> λ
+  [Tokens.F_PRIME, [Tokens.LAMBDA]]
 ];
 
-const StartSymbol = Tokens.E;
+// Para hacer Grammar accesible globalmente
+window.Grammar = Grammar;
