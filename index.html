@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Analizador LL(1) - Calculadora</title>
+  <!-- Implementación 3: Importación de la hoja de estilos nativa -->
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+<div class="container">
+  <h1>Analizador Sintáctico LL(1) en JavaScript (Calculadora)</h1>
+
+  <div class="controls">
+    <label for="inputExpression">Ingrese la Expresión (termine con $):</label>
+    <!-- Implementación 1: Eliminamos el valor por defecto ('value' es ahora vacío) -->
+    <input type="text" id="inputExpression" value="" style="width: 400px; padding: 5px;">
+    <!-- Eliminamos 'onclick' y agregamos un ID para el control en JS -->
+    <button id="analyzeButton">Analizar Expresión</button>
+  </div>
+
+  <div id="grammarOutput" class="output-section"></div>
+  <div id="firstFollowOutput" class="output-section"></div>
+  <div id="tableOutput" class="output-section"></div>
+
+  <h2>Resultados del Análisis</h2>
+  <div id="analysisOutput" class="output-section"></div>
+
+  <div id="traceOutput" class="output-section"></div>
+</div>
+
+<!-- Carga de Scripts en el orden de dependencias -->
+<script src="./js/model/Token.js"></script>
+<script src="./js/model/Grammar.js"></script>
+<script src="./js/analyzer/FirstFollow.js"></script>
+<script src="./js/analyzer/LL1Table.js"></script>
+<script src="./js/analyzer/Parser.js"></script>
+<!-- App.js DEBE ir al final para manejar el DOM y los eventos -->
+<script src="./js/app/App.js"></script>
+</body>
+</html>

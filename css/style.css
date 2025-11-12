@@ -1,0 +1,173 @@
+/* Estilos generales */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f7f6;
+  color: #333;
+  padding: 20px;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  color: #004d40; /* Verde oscuro */
+  border-bottom: 3px solid #e0f2f1;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  font-size: 2em;
+  font-weight: 600;
+}
+
+h2 {
+  color: #00796b; /* Verde medio */
+  border-bottom: 2px solid #eeeeee;
+  padding-bottom: 5px;
+  margin-top: 30px;
+  margin-bottom: 15px;
+  font-size: 1.5em;
+  font-weight: 500;
+}
+
+/* Sección de Control de Entrada */
+.controls {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 15px;
+  background: #e0f2f1;
+  border-radius: 8px;
+  border: 1px solid #b2dfdb;
+}
+
+#inputExpression {
+  flex-grow: 1;
+  padding: 10px 15px;
+  border: 2px solid #b2dfdb;
+  border-radius: 6px;
+  font-size: 1em;
+  transition: border-color 0.3s;
+}
+
+#inputExpression:focus {
+  border-color: #00796b;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 121, 107, 0.3);
+}
+
+#analyzeButton {
+  padding: 10px 25px;
+  background-color: #00897b; /* Verde principal */
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.1s;
+  font-weight: 600;
+}
+
+#analyzeButton:hover {
+  background-color: #00695c;
+}
+
+#analyzeButton:active {
+  transform: scale(0.98);
+}
+
+/* Visualización de Tablas y Resultados */
+
+.output-section {
+  margin-bottom: 40px;
+}
+
+/* Contenedor de FIRST/FOLLOW para diseño flexible */
+.first-follow-container {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.first-follow-container > div {
+  flex: 1 1 48%; /* Permite que cada sección ocupe casi la mitad */
+}
+
+/* Estilo para la Gramática */
+#grammarOutput pre {
+  background: #f0f4c3;
+  color: #444;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #cddc39;
+}
+
+/* Estilo de Tablas */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+th, td {
+  border: 1px solid #e0e0e0;
+  padding: 10px;
+  text-align: center;
+  font-size: 0.9em;
+}
+
+th {
+  background-color: #00897b;
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+td:first-child {
+  font-weight: bold;
+  background-color: #f1f8e9;
+}
+
+/* Resultados de Éxito/Fallo */
+#analysisOutput p {
+  padding: 15px;
+  border-radius: 8px;
+  font-size: 1.1em;
+  margin-bottom: 10px;
+}
+
+.success {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
+  font-weight: bold;
+}
+
+.error {
+  background-color: #ffebee;
+  color: #c62828;
+  border: 1px solid #ef9a9a;
+  font-weight: bold;
+}
+
+/* Estilo para la Traza */
+#traceOutput table th {
+  background-color: #546e7a;
+}
+#traceOutput table td:nth-child(2),
+#traceOutput table td:nth-child(3) {
+  /* Pila y Entrada Restante se alinean a la izquierda para mayor legibilidad */
+  text-align: left !important;
+  font-family: 'Courier New', Courier, monospace;
+}
